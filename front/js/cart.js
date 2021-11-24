@@ -88,23 +88,23 @@ function getCart() {
 
 getCart();
 
-function getTotals(){
+function getTotals() {
 
     // Récupération du total des quantités
-    const elementQuantity = document.getElementsByClassName('itemQuantity');
-    const myLength = elementQuantity.length,
-    totalQuantity = 0;
+    let elementQuantity = document.getElementsByClassName('itemQuantity');
+    let myLength = elementQuantity.length,
+    totalProduct = 0;
 
     for (let i = 0; i < myLength; ++i) {
-        totalQuantity += elementQuantity[i].valueAsNumber;
+        totalProduct += elementQuantity[i].valueAsNumber;
     }
 
-    const productTotalQuantity = document.getElementById('totalQuantity');
-    productTotalQuantity.innerHTML = totalQuantity;
-    console.table(totalQuantity);
+    let productTotalQuantity = document.getElementById('totalQuantity');
+    productTotalQuantity.innerHTML = totalProduct;
+    console.table(totalProduct);
 
     // Récupération du prix total
-    const totalPrice = 0;
+    totalPrice = 0;
 
     for (let i = 0; i < myLength; ++i) {
         totalPrice += (elementQuantity[i].valueAsNumber * produitLocalStorage[i].prixProduit);
@@ -121,18 +121,18 @@ getTotals();
 function modifyQuantity() {
     const quantityModify = document.querySelectorAll(".itemQuantity");
 
-    for (let k = 0; k < quantityModify.length; k++){
-        quantityModify[k].addEventListener("change" , (event) => {
+    for (let i = 0; i < quantityModify.length; i++) {
+        quantityModify[i].addEventListener("change" , (event) => {
             event.preventDefault();
 
             //Selection element à modifier en fonction de son id et sa couleur
-            let quantityModif = produitLocalStorage[k].quantiteProduit;
-            let quantityModifyValue = quantityModify[k].valueAsNumber;
+            let quantityModif = produitLocalStorage[i].quantiteProduit;
+            let quantityModifyValue = quantityModify[i].valueAsNumber;
             
             const resultFind = produitLocalStorage.find((el) => el.quantityModifyValue !== quantityModif);
 
             resultFind.quantiteProduit = quantityModifyValue;
-            produitLocalStorage[k].quantiteProduit = resultFind.quantiteProduit;
+            produitLocalStorage[i].quantiteProduit = resultFind.quantiteProduit;
 
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
         
@@ -144,3 +144,25 @@ function modifyQuantity() {
 
 modifyQuantity()
 
+// Suppression produit
+function deleteProduct() {
+    const btnDelete = document.querySelectorAll(".deleteItem");
+
+    for (let i = 0; i < btnDelete.length; i++) {
+        btnDelete[i].addEventListener("click" , (event) => {
+            event.preventDefault();
+
+            //Selection element à supprimer en fonction de son id et sa couleur
+            const idDelete = produitLocalStorage[i].idProduit;
+            const colorDelete = produitLocalStorage[i].colorProduct;
+
+            produitLocalStorage = produitLocalStorage.filter( el => el.idProduit !== idDelete || el.colorProduct !== colorDelete );
+            
+            localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+            
+            location.reload();
+        })
+    }
+}
+
+deleteProduct();
