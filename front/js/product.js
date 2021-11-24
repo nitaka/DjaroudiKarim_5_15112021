@@ -27,7 +27,6 @@ function getArticle() {
 
 getArticle()
 
-
 function getProduct(article){
     
     // Récupération image de l'article
@@ -56,7 +55,6 @@ function getProduct(article){
         productColors.value = colors;
         productColors.innerHTML = colors;
     }
-
     addToCart(article);
 }
 
@@ -65,14 +63,14 @@ function addToCart(article) {
     const btnPostPanier = document.querySelector("#addToCart");
 
     //Ecoute et initialisation couleur et quantité
-    btnPostPanier.addEventListener("click", (e) => {
+    btnPostPanier.addEventListener("click", () => {
         if (quantitySofa.value > 0 && quantitySofa.value <=100 && quantitySofa.value != 0) {
 
         //Recupération du choix de la couleur
-        let choiceColor = colorSofa.value;
+        const choiceColor = colorSofa.value;
                     
         //Recupération du choix de la quantité
-        let choiceAmont = quantitySofa.value;
+        const choiceAmont = quantitySofa.value;
 
         //Récupération objet options de l'article à ajouter au panier
         let optionsProduit = {
@@ -94,34 +92,34 @@ function addToCart(article) {
             window.location.href ="cart.html";
         }
 
-    //Importation dans le local storage
-    //Si le panier comporte déjà au moins 1 article
-    if (produitLocalStorage) {
-    const resultFind = produitLocalStorage.find(
-        (el) => el.idProduit === idProduct && el.couleurProduit === choiceColor);
-        
-        //Si le produit commandé est déjà dans le panier
-        if (resultFind) {
-            let newQuantite =
-            parseInt(optionsProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
-            resultFind.quantiteProduit = newQuantite;
-            localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-            console.table(produitLocalStorage);
-            addPanier();
-        //Si le produit commandé n'est pas dans le panier
+        //Importation dans le local storage
+        //Si le panier comporte déjà au moins 1 article
+        if (produitLocalStorage) {
+            const resultFind = produitLocalStorage.find(
+                (el) => el.idProduit === idProduct && el.couleurProduit === choiceColor);
+            
+            //Si le produit commandé est déjà dans le panier
+            if (resultFind) {
+                let newQuantite =
+                parseInt(optionsProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
+                resultFind.quantiteProduit = newQuantite;
+                localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+                console.table(produitLocalStorage);
+                addPanier();
+            //Si le produit commandé n'est pas dans le panier
+            } else {
+                produitLocalStorage.push(optionsProduit);
+                localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+                console.table(produitLocalStorage);
+                addPanier();
+            }
+        //Si le panier est vide
         } else {
+            produitLocalStorage =[];
             produitLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
             console.table(produitLocalStorage);
             addPanier();
-        }
-    //Si le panier est vide
-    } else {
-        produitLocalStorage =[];
-        produitLocalStorage.push(optionsProduit);
-        localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-        console.table(produitLocalStorage);
-        addPanier();
-    }}
+        }}
     });
 }
