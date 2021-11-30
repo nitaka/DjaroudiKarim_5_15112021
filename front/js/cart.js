@@ -7,7 +7,7 @@ const positionEmptyCart = document.querySelector("#cart__items");
 // Si le panier est vide
 function getCart() {
     if (produitLocalStorage === null || produitLocalStorage === 0) {
-        const emptyCart = `<p>Votre panier est vide</p>`;
+        let emptyCart = `<p>Votre panier est vide</p>`;
         positionEmptyCart.innerHTML = emptyCart;
     } else {
         for (let produit in produitLocalStorage) { // Boucle des Elements de l'article
@@ -150,12 +150,12 @@ function deleteProduct() {
     const btnDelete = document.querySelectorAll(".deleteItem");
 
     for (let i = 0; i < btnDelete.length; i++) {
-        btnDelete[i].addEventListener("click" , (event) => {
-            event.preventDefault();
+        btnDelete[i].addEventListener("click" , (e) => {
+            e.preventDefault();
 
             //Selection element à supprimer en fonction de son id et sa couleur
-            const idDelete = produitLocalStorage[i].idProduit;
-            const colorDelete = produitLocalStorage[i].colorProduct;
+            let idDelete = produitLocalStorage[i].idProduit;
+            let colorDelete = produitLocalStorage[i].colorProduct;
 
             produitLocalStorage = produitLocalStorage.filter( el => el.idProduit !== idDelete || el.colorProduct !== colorDelete );
             
@@ -260,3 +260,65 @@ function getForm() {
 }
 
 getForm();
+
+//Envoi des informations au localstorage
+function postForm() {
+    let btnCommande = document.getElementById("order");
+
+ 
+
+    //Ecouter le panier
+    btnCommande.addEventListener("click", (event)=> {
+
+       event.preventDefault();
+
+        //Récupération des coordonnées du formulaire client
+        let inputName = document.getElementById('firstName');
+        let inputLastName = document.getElementById('lastName');
+        let inputAdress = document.getElementById('address');
+        let inputCity = document.getElementById('city');
+        let inputMail = document.getElementById('email');
+
+        //Construction d'un array depuis le local storage
+        let idProducts = [];
+        for (let i = 0; i<produitLocalStorage.length;i++) {
+            idProducts.push(produitLocalStorage[i].idProduit);
+        }
+        console.log(idProducts);
+
+        const order = {
+            contact : {
+                firstName: inputName.value,
+                lastName: inputLastName.value,
+                address: inputAdress.value,
+                city: inputCity.value,
+                email: inputMail.value,
+            },
+            products: idProducts,
+        } 
+
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: {
+                'Accept': 'application/json', 
+                "Content-Type": "application/json" 
+            },
+        };
+
+        fetch("http://localhost:3000/api/products/order", options)
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            localStorage.clear();
+            localStorage.setItem("orderId", data.orderId);
+
+            document.location.href = "confirmation.html";
+        })
+        .catch((err) => {
+            alert ("Problème avec fetch : " + err.message);
+        });
+        })
+}
+
+postForm();

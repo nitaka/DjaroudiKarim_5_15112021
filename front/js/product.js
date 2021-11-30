@@ -73,7 +73,7 @@ function addToCart(article) {
         const choiceAmont = quantitySofa.value;
 
         //Récupération objet options de l'article à ajouter au panier
-        let optionsProduit = {
+        const optionsProduit = {
             idProduit: idProduct,
             couleurProduit: choiceColor,
             quantiteProduit: Number(choiceAmont),
