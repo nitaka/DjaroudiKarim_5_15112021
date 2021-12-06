@@ -143,7 +143,7 @@ function modifyQuantity() {
     }
 }
 
-modifyQuantity()
+modifyQuantity();
 
 // Suppression produit
 function deleteProduct() {
@@ -160,7 +160,7 @@ function deleteProduct() {
             produitLocalStorage = produitLocalStorage.filter( el => el.idProduit !== idDelete || el.colorProduct !== colorDelete );
             
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-            
+            localStorage.clear();
             location.reload();
 
         })
@@ -209,6 +209,7 @@ function getForm() {
 
         if (charRegExp.test(inputFirstName.value)) {
             firstNameErrorMsg.innerHTML = '';
+            return false
         } else {
             firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
         }
@@ -257,15 +258,14 @@ function getForm() {
             emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
         }
     };
+    
 }
 
-getForm();
+getForm()
 
 //Envoi des informations au localstorage
 function postForm() {
     let btnCommande = document.getElementById("order");
-
- 
 
     //Ecouter le panier
     btnCommande.addEventListener("click", (event)=> {
@@ -297,27 +297,33 @@ function postForm() {
             products: idProducts,
         } 
 
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                'Accept': 'application/json', 
-                "Content-Type": "application/json" 
-            },
-        };
-
-        fetch("http://localhost:3000/api/products/order", options)
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data);
-            localStorage.clear();
-            localStorage.setItem("orderId", data.orderId);
-
-            document.location.href = "confirmation.html";
-        })
-        .catch((err) => {
-            alert ("Problème avec fetch : " + err.message);
-        });
+        if(inputName.value != "" && inputLastName.value != "" && inputAdress.value != "" && inputCity.value != "" && inputMail.value != "") {
+            const options = {
+                method: 'POST',
+                body: JSON.stringify(order),
+                headers: {
+                    'Accept': 'application/json', 
+                    "Content-Type": "application/json" 
+                },
+            };
+    
+            fetch("http://localhost:3000/api/products/order", options)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+                localStorage.clear();
+                localStorage.setItem("orderId", data.orderId);
+    
+                document.location.href = "confirmation.html";
+            })
+            .catch((err) => {
+                alert ("Problème avec fetch : " + err.message);
+            });
+            
+        } else {
+           alert('Oups\ud83d\ude05 le formulaire semble incomplet !');
+        }
+        
         })
 }
 
