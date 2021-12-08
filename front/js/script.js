@@ -3,8 +3,6 @@
 const dataProduct = () => fetch('http://localhost:3000/api/products')
 .then(res => res.json())
 
-
-
 // Récuperation des données de l'API
 const main = async () => {
     const resquestData = await dataProduct()

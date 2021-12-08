@@ -27,7 +27,7 @@ function getArticle() {
 
 getArticle()
 
-function getProduct(article){
+function getProduct(article) {
     
     // Récupération image de l'article
     let productImg = document.createElement("img");
@@ -48,13 +48,14 @@ function getProduct(article){
     productDescription.innerHTML = article.description;
 
     // Insertion des options de couleurs
-    for (let colors of article.colors){
+    for (let colors of article.colors) {
         console.table(colors);
         let productColors = document.createElement("option");
         document.querySelector("#colors").appendChild(productColors);
         productColors.value = colors;
         productColors.innerHTML = colors;
     }
+    
     addToCart(article);
 }
 

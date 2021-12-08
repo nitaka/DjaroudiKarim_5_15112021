@@ -160,7 +160,6 @@ function deleteProduct() {
             produitLocalStorage = produitLocalStorage.filter( el => el.idProduit !== idDelete || el.colorProduct !== colorDelete );
             
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-            localStorage.clear();
             location.reload();
 
         })
@@ -170,98 +169,75 @@ function deleteProduct() {
 deleteProduct();
 
 // Formulaire
-function getForm() {
-    let form = document.querySelector(".cart__order__form");
+let form = document.querySelector(".cart__order__form");
 
-    //Création expressions régulières
-    let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-    let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-    let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+//Création expressions régulières
+let emailRegExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
+let addressRegExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
-    // Ecoute de modification prénom
-    form.firstName.addEventListener('change', function() {
-        validFirstName(this);
-    });
 
-    // Ecoute de modification nom
-    form.lastName.addEventListener('change', function() {
-        validLastName(this);
-    });
+// Ecoute de modification prenom + message erreur
+form.firstName.addEventListener('change', function() {
+    let firstNameErrorMsg = inputName.nextElementSibling;
 
-    // Ecoute de modification adresse
-    form.address.addEventListener('change', function() {
-        validAddress(this);
-    });
+    if (charRegExp.test(inputName.value)) {
+        firstNameErrorMsg.innerHTML = '';
+    } else {
+        firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+    }
+});
 
-    // Ecoute modification ville
-    form.city.addEventListener('change', function() {
-        validCity(this);
-    });
+// Ecoute de modification nom + message erreur
+form.lastName.addEventListener('change', function() {
+    let lastNameErrorMsg = inputLastName.nextElementSibling;
 
-    // Ecoute de modification du Email
-    form.email.addEventListener('change', function() {
-        validEmail(this);
-    });
+    if (charRegExp.test(inputLastName.value)) {
+        lastNameErrorMsg.innerHTML = '';
+    } else {
+        lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+    }
+});
 
-    //validation prénom
-    const validFirstName = function(inputFirstName) {
-        let firstNameErrorMsg = inputFirstName.nextElementSibling;
+// Ecoute de modification adresse + message erreur
+form.address.addEventListener('change', function() {
+    let addressErrorMsg = inputAddress.nextElementSibling;
 
-        if (charRegExp.test(inputFirstName.value)) {
-            firstNameErrorMsg.innerHTML = '';
-            return false
-        } else {
-            firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-        }
-    };
+    if (addressRegExp.test(inputAddress.value)) {
+        addressErrorMsg.innerHTML = '';
+    } else {
+        addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+    }
+});
 
-    //validation du nom
-    const validLastName = function(inputLastName) {
-        let lastNameErrorMsg = inputLastName.nextElementSibling;
+// Ecoute modification ville + message erreur
+form.city.addEventListener('change', function() {
+    let cityErrorMsg = inputCity.nextElementSibling;
 
-        if (charRegExp.test(inputLastName.value)) {
-            lastNameErrorMsg.innerHTML = '';
-        } else {
-            lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-        }
-    };
+    if (charRegExp.test(inputCity.value)) {
+        cityErrorMsg.innerHTML = '';
+    } else {
+        cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
+    }
+});
 
-    //validation de l'adresse
-    const validAddress = function(inputAddress) {
-        let addressErrorMsg = inputAddress.nextElementSibling;
+// Ecoute de modification du Email + message erreur
+form.email.addEventListener('change', function() {
+    let emailErrorMsg = inputEmail.nextElementSibling;
 
-        if (addressRegExp.test(inputAddress.value)) {
-            addressErrorMsg.innerHTML = '';
-        } else {
-            addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-        }
-    };
+    if (emailRegExp.test(inputEmail.value)) {
+        emailErrorMsg.innerHTML = '';
+    } else {
+        emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
+    }
+});
 
-    //validation de la ville
-    const validCity = function(inputCity) {
-        let cityErrorMsg = inputCity.nextElementSibling;
-
-        if (charRegExp.test(inputCity.value)) {
-            cityErrorMsg.innerHTML = '';
-        } else {
-            cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-        }
-    };
-
-    //validation de l'email
-    const validEmail = function(inputEmail) {
-        let emailErrorMsg = inputEmail.nextElementSibling;
-
-        if (emailRegExp.test(inputEmail.value)) {
-            emailErrorMsg.innerHTML = '';
-        } else {
-            emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
-        }
-    };
-    
-}
-
-getForm()
+//Récupération des coordonnées du formulaire client
+let inputName = document.getElementById('firstName');
+let inputLastName = document.getElementById('lastName');
+let inputAddress = document.getElementById('address');
+let inputCity = document.getElementById('city');
+let inputMail = document.getElementById('email');
 
 //Envoi des informations au localstorage
 function postForm() {
@@ -270,14 +246,7 @@ function postForm() {
     //Ecouter le panier
     btnCommande.addEventListener("click", (event)=> {
 
-       event.preventDefault();
-
-        //Récupération des coordonnées du formulaire client
-        let inputName = document.getElementById('firstName');
-        let inputLastName = document.getElementById('lastName');
-        let inputAdress = document.getElementById('address');
-        let inputCity = document.getElementById('city');
-        let inputMail = document.getElementById('email');
+        event.preventDefault();
 
         //Construction d'un array depuis le local storage
         let idProducts = [];
@@ -290,14 +259,22 @@ function postForm() {
             contact : {
                 firstName: inputName.value,
                 lastName: inputLastName.value,
-                address: inputAdress.value,
+                address: inputAddress.value,
                 city: inputCity.value,
                 email: inputMail.value,
             },
             products: idProducts,
         } 
 
-        if(inputName.value != "" && inputLastName.value != "" && inputAdress.value != "" && inputCity.value != "" && inputMail.value != "") {
+        // test de validation formulaire
+        const validName = charRegExp.test(inputName.value);
+        const validLastName = charRegExp.test(inputLastName.value);
+        const validAddress = addressRegExp.test(inputAddress.value);
+        const validCity = charRegExp.test(inputCity.value);
+        const validMail = emailRegExp.test(inputMail.value);
+
+        // condition d'envoi du formulaire
+        if(validName && validLastName && validAddress && validCity && validMail) {
             const options = {
                 method: 'POST',
                 body: JSON.stringify(order),
@@ -319,12 +296,11 @@ function postForm() {
             .catch((err) => {
                 alert ("Problème avec fetch : " + err.message);
             });
-            
         } else {
-           alert('Oups\ud83d\ude05 le formulaire semble incomplet !');
+            alert("Oups\ud83d\ude05 le formulaire est incorrect !");
         }
         
-        })
+    })
 }
 
-postForm();
+postForm()
