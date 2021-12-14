@@ -10,7 +10,6 @@ const main = async () => {
     .then(function(getProductApi) {
 
         const articles = getProductApi;
-        console.table(articles);
 
         // Boucle qui génére les articles
         for (let article in articles) {

@@ -1,6 +1,5 @@
 //Initialisation du local storage
 let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
-console.table(produitLocalStorage);
 const positionEmptyCart = document.querySelector("#cart__items");
 
 
@@ -101,7 +100,6 @@ function getTotals() {
 
     let productTotalQuantity = document.getElementById('totalQuantity');
     productTotalQuantity.innerHTML = totalProduct;
-    console.table(totalProduct);
 
     // Récupération du prix total
     totalPrice = 0;
@@ -112,7 +110,6 @@ function getTotals() {
 
     let productTotalPrice = document.getElementById('totalPrice');
     productTotalPrice.innerHTML = totalPrice;
-    console.table(totalPrice);
 }
 
 getTotals();
@@ -253,7 +250,6 @@ function postForm() {
         for (let i = 0; i<produitLocalStorage.length;i++) {
             idProducts.push(produitLocalStorage[i].idProduit);
         }
-        console.log(idProducts);
 
         const order = {
             contact : {
@@ -287,7 +283,6 @@ function postForm() {
             fetch("http://localhost:3000/api/products/order", options)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 localStorage.clear();
                 localStorage.setItem("orderId", data.orderId);
     

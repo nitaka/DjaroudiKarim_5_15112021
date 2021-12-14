@@ -2,7 +2,6 @@ let str = window.location.href;
 let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 let article = "";
-console.log(idProduct);
 
 const colorSofa = document. querySelector("#colors");
 const quantitySofa = document.querySelector("#quantity");
@@ -15,7 +14,6 @@ function getArticle() {
 
     .then(async function (getProductApi) {
         article = await getProductApi;
-        console.table(article);
         if (article){
             getProduct(article);
         }
@@ -49,7 +47,6 @@ function getProduct(article) {
 
     // Insertion des options de couleurs
     for (let colors of article.colors) {
-        console.table(colors);
         let productColors = document.createElement("option");
         document.querySelector("#colors").appendChild(productColors);
         productColors.value = colors;
@@ -65,7 +62,7 @@ function addToCart(article) {
 
     //Ecoute et initialisation couleur et quantité
     btnPostPanier.addEventListener("click", () => {
-        if (quantitySofa.value > 0 && quantitySofa.value <=100 && quantitySofa.value != 0) {
+        if (quantitySofa.value > 0 && quantitySofa.value <= 100) {
 
         //Recupération du choix de la couleur
         const choiceColor = colorSofa.value;
@@ -105,22 +102,17 @@ function addToCart(article) {
                 parseInt(optionsProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
                 resultFind.quantiteProduit = newQuantite;
                 localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-                console.table(produitLocalStorage);
-                addPanier();
             //Si le produit commandé n'est pas dans le panier
             } else {
                 produitLocalStorage.push(optionsProduit);
                 localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-                console.table(produitLocalStorage);
-                addPanier();
             }
         //Si le panier est vide
         } else {
-            produitLocalStorage =[];
+            produitLocalStorage = [];
             produitLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
-            console.table(produitLocalStorage);
-            addPanier();
         }}
+        addPanier();
     });
 }
