@@ -107,12 +107,13 @@ function addToCart(article) {
                 produitLocalStorage.push(optionsProduit);
                 localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
             }
+            addPanier();
         //Si le panier est vide
         } else {
             produitLocalStorage = [];
             produitLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
         }}
-        addPanier();
+        
     });
 }
