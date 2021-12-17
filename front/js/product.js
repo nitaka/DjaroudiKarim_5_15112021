@@ -2,7 +2,6 @@ let str = window.location.href;
 let url = new URL(str);
 let idProduct = url.searchParams.get("id");
 let article = "";
-console.log(idProduct);
 
 const colorSofa = document. querySelector("#colors");
 const quantitySofa = document.querySelector("#quantity");
@@ -15,7 +14,6 @@ function getArticle() {
 
     .then(async function (getProductApi) {
         article = await getProductApi;
-        console.table(article);
         if (article){
             getProduct(article);
         }
@@ -27,8 +25,7 @@ function getArticle() {
 
 getArticle()
 
-
-function getProduct(article){
+function getProduct(article) {
     
     // Récupération image de l'article
     let productImg = document.createElement("img");
@@ -49,13 +46,74 @@ function getProduct(article){
     productDescription.innerHTML = article.description;
 
     // Insertion des options de couleurs
-    for (let colors of article.colors){
-        console.table(colors);
+    for (let colors of article.colors) {
         let productColors = document.createElement("option");
         document.querySelector("#colors").appendChild(productColors);
         productColors.value = colors;
         productColors.innerHTML = colors;
     }
+    
     addToCart(article);
 }
 
+//Gestion du panier
+function addToCart(article) {
+    const btnPostPanier = document.querySelector("#addToCart");
+
+    //Ecoute et initialisation couleur et quantité
+    btnPostPanier.addEventListener("click", () => {
+        if (quantitySofa.value > 0 && quantitySofa.value <= 100) {
+
+        //Recupération du choix de la couleur
+        const choiceColor = colorSofa.value;
+                    
+        //Recupération du choix de la quantité
+        const choiceAmont = quantitySofa.value;
+
+        //Récupération objet options de l'article à ajouter au panier
+        const optionsProduit = {
+            idProduit: idProduct,
+            couleurProduit: choiceColor,
+            quantiteProduit: Number(choiceAmont),
+            nomProduit: article.name,
+            prixProduit: article.price,
+            descriptionProduit: article.description,
+            imgProduit: article.imageUrl,
+            altImgProduit: article.altTxt
+        };
+
+        //Initialisation du local storage
+        let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
+
+        //Ajout panier
+        const addPanier = () => {
+            window.location.href ="cart.html";
+        }
+
+        //Importation dans le local storage
+        //Si le panier comporte déjà au moins 1 article
+        if (produitLocalStorage) {
+            const resultFind = produitLocalStorage.find(
+                (el) => el.idProduit === idProduct && el.couleurProduit === choiceColor);
+            
+            //Si le produit commandé est déjà dans le panier
+            if (resultFind) {
+                let newQuantite =
+                parseInt(optionsProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
+                resultFind.quantiteProduit = newQuantite;
+                localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+            //Si le produit commandé n'est pas dans le panier
+            } else {
+                produitLocalStorage.push(optionsProduit);
+                localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+            }
+            addPanier();
+        //Si le panier est vide
+        } else {
+            produitLocalStorage = [];
+            produitLocalStorage.push(optionsProduit);
+            localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
+        }}
+        
+    });
+}
