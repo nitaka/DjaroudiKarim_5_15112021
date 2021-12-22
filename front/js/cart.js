@@ -43,8 +43,6 @@ function getCart() {
     }
 }
 
-
-
 getCart();
 
 function getTotals() {
@@ -251,8 +249,16 @@ function postForm() {
             .catch((err) => {
                 alert ("Problème avec fetch : " + err.message);
             });
-        } else {
-            alert("Oups\ud83d\ude05 le formulaire est incorrect !");
+        } else if(validName === false) {
+            alert("Oups\ud83d\ude05 le prénom est incorrect !");
+        } else if(validLastName === false) {
+            alert("Oups\ud83d\ude05 le nom est incorrect !");
+        } else if(validAddress === false) {
+            alert("Oups\ud83d\ude05 l'adresse est incorrect !");
+        } else if(validCity === false) {
+            alert("Oups\ud83d\ude05 le ville est incorrect !");
+        } else if(validMail === false) {
+            alert("Oups\ud83d\ude05 le mail est incorrect !");
         }
         
     })

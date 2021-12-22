@@ -14,12 +14,12 @@ function getArticle() {
 
     .then(async function (getProductApi) {
         article = await getProductApi;
-        if (article){
+        if (article) {
             getProduct(article);
         }
     })
     .catch((error) => {
-        console.log("Erreur de la requête API");
+        console.log("Erreur de la requête API", error);
     })
 }
 
@@ -63,6 +63,8 @@ function addToCart(article) {
     //Ecoute et initialisation couleur et quantité
     btnPostPanier.addEventListener("click", () => {
         if (quantitySofa.value > 0 && quantitySofa.value <= 100) {
+
+            
 
         //Recupération du choix de la couleur
         const choiceColor = colorSofa.value;
@@ -114,6 +116,10 @@ function addToCart(article) {
             produitLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
         }}
+
+        if(quantitySofa.value <= 0) {
+            alert("Choisissez une couleur et le nombre d'articles afin de valider l'ajout du produit")
+        } 
         
     });
 }
